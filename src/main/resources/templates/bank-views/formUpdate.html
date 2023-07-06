@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение данные банка</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <script type="text/javascript" src="../js/banks.js" th:src="@{/js/banks.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="col-md-6 offset-3 mt-3">
+        <form class="form-control" method="post" th:action="@{update}" th:object="${bank}">
+            <div class="mb-3 mt-3">
+                <input type="number" name="bankId" class="form-control" th:value="${bank.getBankId()}" hidden="hidden">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="logo-field" class="form-label">Логотип:</label>
+                </br>
+                <img id="logo-field" width="70px" th:src="${bank.getLogo()}" alt="Изображение..."/>
+            </div>
+            <input type="checkbox" id="hd-1" class="hide"/>
+            <label for="hd-1" class="label">Нажмите здесь, чтобы изменить логотип</label>
+            <div class="file-input">
+                <input id="logo" name="logo" type="file" accept="image/*" class="form-control">
+                <input id="hidden" type="hidden" th:field="${bank.logo}">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="bankName" class="form-label">Название:</label>
+                <input id="bankName" type="text" name="bankName" class="form-control" th:errorClass="'error'"
+                       th:value="${bank.getBankName()}">
+                <div id="nameError" class="text-danger" th:if="${#fields.hasErrors('bankName')}" th:errors="${bank.bankName}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="address" class="form-label">Адрес:</label>
+                <input id="address" type="text" name="address" class="form-control" th:errorClass="'error'"
+                       th:value="${bank.getAddress()}">
+                <div id="addressError" class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="${bank.address}">Error</div>
+            </div>
+            <label class="form-label">Телефоны:</label>
+            <div class="mb-3 mt-3">
+                <label for="A1Number" class="form-label">A1:</label>
+                <input id="A1Number" type="text" name="a1Number" class="form-control" th:errorClass="'error'"
+                       th:value="${bank.getA1Number()}">
+                <div id="a1Error" class="text-danger" th:if="${#fields.hasErrors('a1Number')}" th:errors="${bank.a1Number}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="MtsNumber" class="form-label">МТС:</label>
+                <input id="MtsNumber" type="text" name="mtsNumber" class="form-control" th:errorClass="'error'"
+                       th:value="${bank.getMtsNumber()}">
+                <div id="mtsError" class="text-danger" th:if="${#fields.hasErrors('mtsNumber')}" th:errors="${bank.mtsNumber}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="LifeNumber" class="form-label">Life:</label>
+                <input id="LifeNumber" type="text" name="lifeNumber" class="form-control" th:errorClass="'error'"
+                       th:value="${bank.getLifeNumber()}">
+                <div id="lifeError" class="text-danger" th:if="${#fields.hasErrors('lifeNumber')}" th:errors="${bank.lifeNumber}">
+                    Error
+                </div>
+            </div>
+            <div class="d-grid gap-2 mx-auto">
+                <button type="submit" class="btn btn-dark">Изменить</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

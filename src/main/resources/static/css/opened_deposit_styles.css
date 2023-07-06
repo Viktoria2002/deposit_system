@@ -1,0 +1,18 @@
+body {
+    background-color: gainsboro;
+}
+
+.deposit-btn {
+    background-color: #483D8B;
+    border-color: #483D8B;
+    color: white;
+}
+
+.deposit-btn:hover {
+    background-color: #6A5ACD;
+    border-color: #6A5ACD;
+}
+
+#cardForReplenishmentError, #amountForWithdrawalError, #cardForReplenishmentError2, #amountForWithdrawalError2 {
+    display: none;
+}

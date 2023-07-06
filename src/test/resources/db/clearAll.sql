@@ -1,0 +1,13 @@
+DELETE FROM users;
+DELETE FROM roles;
+DELETE FROM user_role;
+DELETE FROM passports;
+DELETE FROM clients;
+DELETE FROM demand_deposits;
+DELETE FROM term_deposits;
+DELETE FROM opened_demand_deposits;
+DELETE FROM opened_term_deposits;
+DELETE FROM demand_deposit_operations;
+DELETE FROM term_deposit_operations;
+DELETE FROM banks;
+DELETE FROM cards;

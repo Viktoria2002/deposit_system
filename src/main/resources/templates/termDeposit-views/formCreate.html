@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление срочного вклада</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <script type="text/javascript" src="../js/deposits.js" th:src="@{/js/deposits.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="col-md-6 offset-3 mt-3">
+        <form id="form" class="form-control" method="post" th:action="@{save}">
+            <div class="mb-3 mt-3">
+                <label class="form-label">Банк:</label>
+                <select id="banks" th:field="${termDeposit.bank}" name="bank" class="form-select">
+                    <option name="bank" th:each="bank:${listBanks}" th:text="${bank.getBankName()}"
+                            th:value="${bank.getBankId()}"></option>
+                </select>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="depositName" class="form-label">Название:</label>
+                <input id="depositName" type="text" name="depositName" class="form-control" th:errorClass="'error'"
+                       th:field="${termDeposit.depositName}">
+                <div id="nameError" class="text-danger" th:if="${#fields.hasErrors('termDeposit.depositName')}"
+                     th:errors="${termDeposit.depositName}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="interestRate" class="form-label">Ставка:</label>
+                <input id="interestRate" type="number" step="0.01" name="interestRate" class="form-control" th:errorClass="'error'"
+                       th:field="${termDeposit.interestRate}">
+                <div id="interestRateError" class="text-danger" th:if="${#fields.hasErrors('termDeposit.interestRate')}"
+                     th:errors="${termDeposit.interestRate}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="amount" class="form-label">Минимальная сумма:</label>
+                <input id="amount" type="number" step="0.01" name="amount" class="form-control" th:errorClass="'error'"
+                       th:field="${termDeposit.amount}">
+                <div id="amountError" class="text-danger" th:if="${#fields.hasErrors('termDeposit.amount')}"
+                     th:errors="${termDeposit.amount}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="currency" class="form-label">Валюта:</label>
+                <input id="currency" type="text" name="currency" class="form-control" th:errorClass="'error'"
+                       th:field="${termDeposit.currency}">
+                <div id="currencyError" class="text-danger" th:if="${#fields.hasErrors('termDeposit.currency')}"
+                     th:errors="${termDeposit.currency}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="term" class="form-label">Срок:</label>
+                <input id="term" type="text" name="term" class="form-control" th:errorClass="'error'"
+                       th:field="${termDeposit.term}">
+                <div id="termError" class="text-danger" th:if="${#fields.hasErrors('termDeposit.term')}"
+                     th:errors="${termDeposit.term}">Error
+                </div>
+            </div>
+            <div class="mb-3 mt-3">
+                <input id="hasCapitalization" type="checkbox" name="hasCapitalization" class="form-check-input"
+                       th:field="${termDeposit.hasCapitalization}">
+                <label for="hasCapitalization" class="form-label">Капитализация</label>
+            </div>
+            <div class="mb-3 mt-3">
+                <input id="hasReplenishment" type="checkbox" name="hasReplenishment" class="form-check-input"
+                       th:field="${termDeposit.hasReplenishment}">
+                <label for="hasReplenishment" class="form-label">Пополнение</label>
+            </div>
+            <div class="mb-3 mt-3">
+                <input id="hasPartialWithdrawal" type="checkbox" name="hasPartialWithdrawal" class="form-check-input"
+                       th:field="${termDeposit.hasPartialWithdrawal}">
+                <label for="hasPartialWithdrawal" class="form-label">Частичное снятие</label>
+            </div>
+            <div class="mb-3 mt-3">
+                <input id="hasEarlyWithdrawal" type="checkbox" name="hasEarlyWithdrawal" class="form-check-input"
+                       th:field="${termDeposit.hasEarlyWithdrawal}">
+                <label for="hasEarlyWithdrawal" class="form-label">Досрочное закрытие</label>
+            </div>
+            <div class="d-grid gap-2 mx-auto">
+                <button id="addBtn" type="submit" class="btn btn-dark">Добавить вклад</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+    <title>Открытие вклада</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/openedDeposits.js" th:src="@{/js/openedDeposits.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="d-flex flex-column bd-highlight mb-3">
+        <div class="p-2 bd-highlight text-center">
+            <h1 class="d-inline">Вклад "</h1>
+            <h1 class="d-inline" th:text="${termDeposit.depositName}"></h1>
+            <h1 class="d-inline">" от Банка </h1>
+            <h1 class="d-inline" th:text="${termDeposit.bank.bankName}"></h1>
+        </div>
+        <div class="d-flex flex-row justify-content-center fs-4">
+            <div class="p-2 bd-highlight me-5">
+                <label>Ставка: </label>
+                <label th:text="${termDeposit.interestRate}"/>
+                <label>%</label></br>
+                <label>Сумма вклада от: </label>
+                <label th:text="${termDeposit.amount}"/></br>
+                <label>Валюта: </label>
+                <label th:text="${termDeposit.currency}"/></br>
+                <label>Срок: </label>
+                <label th:text="${termDeposit.term}"/>
+            </div>
+            <div class="p-2 bd-highlight">
+                <label th:class="${termDeposit.hasCapitalization?'icon-check':'icon-cross'}"></label>
+                <label>Капитализация</label></br>
+                <label th:class="${termDeposit.hasReplenishment?'icon-check':'icon-cross'}"></label>
+                <label>Пополнение</label></br>
+                <label th:class="${termDeposit.hasPartialWithdrawal?'icon-check':'icon-cross'}"></label>
+                <label>Частичное снятие</label></br>
+                <label th:class="${termDeposit.hasEarlyWithdrawal?'icon-check':'icon-cross'}"></label>
+                <label>Досрочное закрытие</label></br>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+        <div class="card">
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                    <tr class="text-center">
+                        <th>№</th>
+                        <th>Дата операции</th>
+                        <th>Название</th>
+                        <th>Сумма</th>
+                        <th>Остаток вклада</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-center" th:each="operation:${listTermDepositsOperations}">
+                        <td th:text="${operationStat.index + 1}"></td>
+                        <td th:text="${#temporals.format(operation.getDateOfOperation(), 'dd.MM.yyyy')}"></td>
+                        <td th:text="${operation.getType().getOperation()}"></td>
+                        <td th:text="${operation.getAmount()}"></td>
+                        <td th:text="${operation.getBalance()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

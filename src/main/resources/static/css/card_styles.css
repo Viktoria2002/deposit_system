@@ -1,0 +1,29 @@
+.delete-card-btn {
+    margin-top: -5px;
+    margin-right: -25px;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.delete-card-btn:before {
+    content: "\f1f8";
+    font-family: FontAwesome;
+    font-size: 25px;
+    color: black;
+}
+
+.delete-card-btn:hover:before {
+    color: rgba(0,0,0,0.7);
+}
+
+.error {
+    box-shadow: 0px 0px 5px rgba(255,0,0,0.8);
+}
+
+@charset "UTF-8";
+.errorLabel {
+    color: rgba(255,0,0,0.8);
+}
+#cardBalanceError, #numberError, #validityPeriodError, #cvvError, #amountErrorOpenedDeposit, #cardExistError {
+    display: none;
+}

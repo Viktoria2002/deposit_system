@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="template">
+<head>
+    <title>Отчёты</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="d-flex flex-row">
+        <div class="container mt-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center fw-bold ">Рейтинг вкладов</h2>
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                        <tr class="text-center">
+                            <th>№</th>
+                            <th>Вклад</th>
+                            <th>Количество оформлений</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="text-center" th:each="entry:${rating}">
+                            <td th:text="${entryStat.index + 1}"></td>
+                            <td th:text="${entry.getKey()}"></td>
+                            <td th:text="${entry.getValue()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="container mt-3 p-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center fw-bold ">Состояние депозитных портфелей</h2>
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                        <tr class="text-center">
+                            <th>№</th>
+                            <th>Банк</th>
+                            <th>Депозитный портфель</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="text-center" th:each="reportEntry:${portfolios}">
+                            <td th:text="${reportEntryStat.index + 1}"></td>
+                            <td th:text="${reportEntry.getBankName()}"></td>
+                            <td th:text="${reportEntry.getDepositAmount() + ' BYN'}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+body {
+    background-color: gainsboro;
+}
+
+.btn-size {
+    height: 40px;
+    width: 40px;
+}
+.btn-info:before {
+    content: "\f129";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: white;
+}
+
+.btn-edit-password {
+    width: 250px;
+    height: 60px;
+    font-size: 20px;
+}
+
+.image {
+    height: 350px;
+    width: 350px;
+}
+
+.icon-edit {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin-top: -5px;
+    float: right;
+    color: transparent;
+}
+
+.icon-edit:hover {
+    color: transparent;
+}
+
+.icon-edit:before{
+    content: "\f044";
+    font-family: FontAwesome;
+    font-size: 35px;
+    color: white;
+}
+
+.icon-edit:hover:before{
+    color: gray;
+}
+
+.filter-btn {
+    border-color: transparent;
+    color: transparent;
+}
+
+.filter-btn:hover {
+    color: transparent;
+}
+
+.filter-btn:before {
+    content: "\f0b0";
+    font-family: FontAwesome;
+    font-size: 50px;
+    color: black;
+}
+
+.more_btn {
+    background-color: #483D8B;
+    border-color: #483D8B;
+}
+
+.more_btn:hover {
+    background-color: #6A5ACD;
+    border-color: #6A5ACD;
+}
+
+.error {
+    box-shadow: 0px 0px 5px rgba(255,0,0,0.8);
+}
+
+@charset "UTF-8";
+.errorLabel {
+    color: rgba(255,0,0,0.8);
+}
+#passwordError, #passwordConfirmationError, #passwordConfirmationError2,
+#surnameError, #nameError, #patronymicError, #genderError, #dateOfBirthError, #phoneNumberError,
+#passportNumberError, #organizationError, #dateOfIssueError, #passportValidityPeriodError, #dateRangeError {
+    display: none;
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="/webjars/bootstrap/5.1.3/js/bootstrap.bundle.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../js/cards.js" th:src="@{/js/cards.js}"></script>
+    <link th:href="@{/css/card_styles.css}" rel="stylesheet" />
+</head>
+<body>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}" sec:authorize="hasAnyAuthority('Admin', 'Client')">Главная</a>
+        <div class="collapse navbar-collapse" id="mynavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" th:href="@{/banks/index}" role="button" sec:authorize="hasAuthority('Admin')">Банки</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" th:href="@{/clients/index}" role="button" sec:authorize="hasAuthority('Admin')">Клиенты</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Вклады</a>
+                    <ul class="dropdown-menu">
+                        <li><a id="demandDepositsBtn" class="dropdown-item" th:href="@{/demandDeposits/index}"
+                               onclick="localStorage.clear();" sec:authorize="hasAnyAuthority('Admin', 'Client')">Вклады до востребования</a></li>
+                        <li><a id="termDepositsBtn" class="dropdown-item" th:href="@{/termDeposits/index}"
+                               onclick="localStorage.clear();" sec:authorize="hasAnyAuthority('Admin', 'Client')">Срочные вклады</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       sec:authorize="hasAuthority('Client')">Мои вклады</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" th:href="@{/openedDeposits/open/client}">Открытые вклады</a></li>
+                        <li><a class="dropdown-item" th:href="@{/openedDeposits/close/client}">Закрытые вклады</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="modal-btn" class="nav-link" role="button" data-bs-toggle="modal" data-bs-target="#cards-id"
+                       sec:authorize="hasAuthority('Client')">Мои карты</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" th:href="@{/reports/depositsRating}" role="button"
+                       sec:authorize="hasAuthority('Admin')">Отчёты</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <span sec:authentication="name"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li sec:authorize="hasAnyAuthority('Admin', 'Client')">
+                            <a class="dropdown-item" th:href="@{/clients/personalData}" role="button">Профиль</a>
+                        </li>
+                        <li><a class="dropdown-item" th:href="@{/login}">Выйти</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<section layout:fragment="content1"></section>
+<div class="modal fade" id="cards-id" tabindex="-1" role="dialog" aria-labelledby="cardsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cardsLabel">Мои карты</h5>
+                <button id="closeModalBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tbody id="card-table">
+                    </tbody>
+                </table>
+                <div class="d-grid gap-2 mx-auto">
+                    <button class="btn btn-dark float-end" role="button" data-bs-toggle="modal"
+                            data-bs-target="#add-card-modal">Добавить карту
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="add-card-modal" tabindex="-1" role="dialog" aria-labelledby="cardsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCardLabel">Привязать новую карту</h5>
+                <button id="close-btn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-control">
+                    <div class="mb-3 mt-3">
+                        <label for="number" class="form-label">Номер:</label>
+                        <input id="number" type="text" name="number" class="form-control" placeholder="0000 0000 0000 0000" minlength="19" required>
+                        <label id="numberError" class="errorLabel">Номер банковской карты должен состоять из 16 цифр.</label>
+                        <label id="cardExistError" class="errorLabel">Данная карта уже привязана.</label>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="validityPeriod" class="form-label">Срок действия:</label>
+                        <input id="validityPeriod" type="text" name="validityPeriod" class="form-control"
+                               pattern="^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$" placeholder="ММ/ГГ" required>
+                        <label id="validityPeriodError" class="errorLabel">Срок действия банковской карты введен
+                            некорректно.</label>
+                    </div>
+                    <div class="mb-3 mt-3">
+                        <label for="cvv" class="form-label">CVV/CVC:</label>
+                        <input id="cvv" type="text" name="cvv" class="form-control"placeholder="123" minlength="3" required>
+                        <label id="cvvError" class="errorLabel">CVV должен состоять из 3 цифр.</label>
+                    </div>
+                    <div class="d-grid gap-2 mx-auto">
+                        <button id="saveCardBtn" type="submit" class="btn btn-dark">Привязать карту</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

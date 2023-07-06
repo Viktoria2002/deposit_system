@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+    <title>Открытие вклада</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/openedDeposits.js" th:src="@{/js/openedDeposits.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="d-flex flex-column bd-highlight mb-3">
+        <div class="p-2 bd-highlight text-center">
+            <h1 class="d-inline">Вклад "</h1>
+            <h1 class="d-inline" th:text="${termDeposit.depositName}"></h1>
+            <h1 class="d-inline">" от Банка </h1>
+            <h1 class="d-inline" th:text="${termDeposit.bank.bankName}"></h1>
+        </div>
+        <div class="d-flex flex-row justify-content-center fs-4">
+            <div class="p-2 bd-highlight me-5">
+                <label>Ставка: </label>
+                <label th:text="${termDeposit.interestRate}"/>
+                <label>%</label></br>
+                <label>Сумма вклада от: </label>
+                <label th:text="${termDeposit.amount}"/></br>
+                <label>Валюта: </label>
+                <label th:text="${termDeposit.currency}"/></br>
+                <label>Срок: </label>
+                <label th:text="${termDeposit.term}"/>
+            </div>
+            <div class="p-2 bd-highlight">
+                <label th:class="${termDeposit.hasCapitalization?'icon-check':'icon-cross'}"></label>
+                <label>Капитализация</label></br>
+                <label th:class="${termDeposit.hasReplenishment?'icon-check':'icon-cross'}"></label>
+                <label>Пополнение</label></br>
+                <label th:class="${termDeposit.hasPartialWithdrawal?'icon-check':'icon-cross'}"></label>
+                <label>Частичное снятие</label></br>
+                <label th:class="${termDeposit.hasEarlyWithdrawal?'icon-check':'icon-cross'}"></label>
+                <label>Досрочное закрытие</label></br>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-4 offset-lg-4 mt-3">
+        <form id="form" class="form-control" method="post" th:action="@{save}">
+            <div class="mb-3 mt-3">
+                <label class="form-label">Банковская карта:</label>
+                <select id="cards" th:field="${openedTermDeposit.card}" name="card" class="form-select">
+                    <option name="card" th:data-calc-value="${card.getCardBalance()}" th:each="card:${listCards}"
+                            th:text="${card.getPaymentSystem() + ' ****' + card.getNumber()}"
+                            th:value="${card.getCardId()}"></option>
+                </select>
+                <label id="cardBalanceError" class="errorLabel">На выбранной карте недостаточно средств.</label>
+            </div>
+            <select th:field="${openedTermDeposit.termDeposit}" name="termDeposit" class="form-select" hidden="hidden">
+                <option selected th:value="${termDeposit.getDepositId()}"></option>
+            </select>
+            <div class="mb-3 mt-3">
+                <label for="amount" class="form-label">Сумма вклада:</label>
+                <input id="minAmount" type="number" step="0.01" name="minAmount" class="form-control" hidden="hidden"
+                       th:value="${termDeposit.amount}">
+                <input id="amount" type="number" step="0.01" name="amount" class="form-control"
+                       th:field="${openedTermDeposit.amount}">
+                <label id="amountErrorOpenedDeposit" class="errorLabel">Сумма вклада меньше минимально
+                    возможной.</label>
+            </div>
+            <div class="d-grid gap-2 mx-auto">
+                <button id="openDepositBtn" type="submit" class="btn btn-dark">Открыть вклад</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="template">
+<head>
+    <title>Банки</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/deposit_styles.css}" rel="stylesheet"/>
+    <script type="text/javascript" src="../js/cards.js" th:src="@{/js/cards.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                    <tr class="text-center">
+                        <th>№</th>
+                        <th>Вклад</th>
+                        <th>Сумма</th>
+                        <th>Валюта</th>
+                        <th>Дата открытия</th>
+                        <th>Статус</th>
+                        <th colspan="5">Операции</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-center" th:each="demandDeposit:${listOpenedDemandDeposits}">
+                        <td th:text="${demandDepositStat.index + 1}"></td>
+                        <td th:text="${demandDeposit.getDemandDeposit() == null ? 'Вклад удален' : demandDeposit.getDemandDeposit().getDepositName()}"></td>
+                        <td th:text="${demandDeposit.getAmount()}"></td>
+                        <td th:text="${demandDeposit.getDemandDeposit() == null ? '-' : demandDeposit.getDemandDeposit().getCurrency()}"></td>
+                        <td th:text="${#temporals.format(demandDeposit.getOpeningDate(), 'dd.MM.yyyy')}"></td>
+                        <td th:text="${demandDeposit.getStatus()}"></td>
+                        <td>
+                            <a class="btn btn-primary" th:href="@{/demandDepositOperations/statement(depositId=${demandDeposit.getId()})}">Выписка</a>
+                        </td>
+                    </tr>
+                    <tr class="text-center" th:each="termDeposit:${listOpenedTermDeposits}">
+                        <td th:text="${termDepositStat.index + listOpenedDemandDeposits.size() + 1}"></td>
+                        <td th:text="${termDeposit.getTermDeposit() == null ? 'Вклад удален' : termDeposit.getTermDeposit().getDepositName()}"></td>
+                        <td th:text="${termDeposit.getAmount()}"></td>
+                        <td th:text="${termDeposit.getTermDeposit() == null ? '-' : termDeposit.getTermDeposit().getCurrency()}"></td>
+                        <td th:text="${#temporals.format(termDeposit.getOpeningDate(), 'dd.MM.yyyy')}"></td>
+                        <td th:text="${termDeposit.getStatus()}"></td>
+                        <td>
+                            <a class="btn btn-primary" th:href="@{/termDepositOperations/statement(depositId=${termDeposit.getId()})}">Выписка</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

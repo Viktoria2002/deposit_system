@@ -1,0 +1,171 @@
+body {
+    background-color: gainsboro;
+}
+.search-box {
+    background: #FFFFFF;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.shadow {
+    box-shadow:rgba(0,0,0,0.5) 0 5px 15px;
+}
+
+.search-field,.search-button {
+    border: none;
+    outline: none;
+    background: transparent;
+}
+.search-field {
+    width: 1212px;
+    height: 45px;
+    padding-left: 15px;
+}
+
+.add-btn {
+    border-color: transparent;
+    color: transparent;
+}
+
+.add-btn:hover {
+    color: transparent;
+}
+
+.add-btn:before {
+    content: "\f067";
+    font-family: FontAwesome;
+    font-size: 50px;
+    color: black;
+}
+
+.add-btn:hover:before {
+    color: rgba(0,0,0,0.8);
+}
+
+.icon-sort {
+    background-color: transparent;
+    border-color: transparent;
+    width: 25px;
+    height: 25px;
+    position: relative;
+    float: right;
+}
+
+.icon-sort:before{
+    content: "\f160";
+    font-family: FontAwesome;
+    font-size: 17px;
+    color: white;
+}
+
+.search-button {
+    height: 45px;
+    width: 45px;
+    position: relative;
+    border-radius: 0px 10px 10px 0px;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    background-color: black;
+}
+
+.search-button:before{
+    content: "\f002";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: white;
+}
+
+.search-button:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.icon-check {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.icon-check:before{
+    content: "\f00c";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: black;
+}
+
+.icon-cross {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.icon-cross:before{
+    content: "\f00d";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: black;
+}
+
+.icon-percent {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.icon-percent:before{
+    content: "\f295";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: black;
+}
+
+.deposit-btn {
+    background-color: #483D8B;
+    border-color: #483D8B;
+    color: white;
+}
+
+.deposit-btn:hover {
+    background-color: #6A5ACD;
+    border-color: #6A5ACD;
+}
+
+.btn-info:before {
+    content: "\f1f8";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: white;
+}
+
+.btn-success:before {
+    content: "\f040";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: white;
+}
+
+.btn-danger:before {
+    content: "\f1f8";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: white;
+}
+
+.error {
+    box-shadow: 0px 0px 5px rgba(255,0,0,0.8);
+}
+
+table {
+    border-collapse: separate;
+}
+
+@charset "UTF-8";
+.errorLabel {
+    color: rgba(255,0,0,0.8);
+}
+#cardForReplenishmentError, #amountForWithdrawalError, #cardForReplenishmentError2, #amountForWithdrawalError2 {
+    display: none;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="template"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Банки</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <form class="search-box shadow" method="get" th:action="@{index}">
+                    <input type="text" class="search-field" name="keyword" placeholder="Искать здесь..." th:value="${keyword}">
+                    <button type="submit" class="search-button"></button>
+                </form>
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                    <tr class="text-center">
+                        <th>№</th>
+                        <th>Логотип</th>
+                        <th>Название<a class="icon-sort" th:href="@{/banks/sorting}"/></th>
+                        <th>Адрес</th>
+                        <th>A1</th>
+                        <th>МТС</th>
+                        <th>Life</th>
+                        <th sec:authorize="hasAuthority('Admin')">Операции</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-center" th:each="bank:${listBanks}">
+                        <td th:text="${bankStat.index + 1}"></td>
+                        <td><img width="70px" th:src="${bank.getLogo()}" alt="Изображение..."/></td>
+                        <td th:text="${bank.getBankName()}"></td>
+                        <td th:text="${bank.getAddress()}"></td>
+                        <td th:text="${bank.getA1Number()}"></td>
+                        <td th:text="${bank.getMtsNumber()}"></td>
+                        <td th:text="${bank.getLifeNumber()}"></td>
+                        <td sec:authorize="hasAuthority('Admin')">
+                            <a class="btn btn-danger me-2" onclick="return confirm('Вы действительно хотите удалить запись?')"
+                                   th:href="@{/banks/delete(bankId=${bank.getBankId()}, keyword=${keyword})}"></a>
+                            <a class="btn btn-success" onclick="localStorage.clear();"
+                                   th:href="@{/banks/formUpdate(bankId=${bank.getBankId()})}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <a class="add-btn" th:href="@{/banks/formCreate}" onclick="localStorage.clear();" sec:authorize="hasAuthority('Admin')"></a>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

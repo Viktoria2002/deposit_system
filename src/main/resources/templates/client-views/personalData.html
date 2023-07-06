@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="template"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Личные данные</title>
+    <link th:href="@{/css/client_styles.css}" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/clients.js" th:src="@{/js/clients.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="d-flex d-flex flex-row justify-content-around fs-5 mt-5">
+        <div class="p-2 bd-highlight me-5">
+            <div class="d-flex flex-column bd-highlight mb-3">
+                <div class="p-2 bd-highlight text-center">
+                    <img class="image" th:src="@{/images/user.png}">
+                </div>
+                <div class="p-2 bd-highlight text-center">
+                    <button id="editPassword" class="btn btn-dark btn-edit-password" role="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#passwordModal">Изменить пароль
+                    </button>
+                </div>
+                <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog"
+                     aria-labelledby="passwordModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editPasswordLabel">Редактирование пароля</h5>
+                                <button id="close-btn" type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-control">
+                                    <div class="mb-3 mt-3">
+                                        <input id="email" type="text" name="email" class="form-control" hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="password" class="form-label">Пароль:</label>
+                                        <input id="password" type="password" name="password" class="form-control"
+                                               pattern="(?=.*[0-9])(?=.*[!@#$%^&*./])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*./]{6,}"
+                                               required>
+                                        <label id="passwordError" class="errorLabel">Пароль должен содержать хотя бы
+                                            одну цифру, одну латинскую букву в нижнем и верхнем регистрах, один
+                                            спецсимвол. Минимальное количество символов - 6.</label>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="passwordConfirmation" class="form-label">Подтверждение
+                                            пароля:</label>
+                                        <input id="passwordConfirmation" type="password" name="passwordConfirmation"
+                                               class="form-control" required>
+                                        <label id="passwordConfirmationError" class="errorLabel">Пароли не
+                                            совпадают!!!</label>
+                                        <label id="passwordConfirmationError2" class="errorLabel">Поле является
+                                            обязательным.</label>
+                                    </div>
+                                    <div class="d-grid gap-2 mx-auto">
+                                        <button id="editPasswordBtn" type="submit" class="btn btn-dark">Изменить
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-2 bd-highlight me-5">
+            <table style="width: 500px;" class="table table-hover">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th colspan="2">Общая информация
+                        <a id="editGeneralInfo" class="icon-edit" role="button" data-bs-toggle="modal"
+                           data-bs-target="#generalInfoModal"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-lg-start">
+                    <td>Фамилия</td>
+                    <td th:text="${client.getSurname()}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Имя</td>
+                    <td th:text="${client.getName()}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Отчество</td>
+                    <td th:text="${client.getPatronymic()}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Пол</td>
+                    <td th:text="${client.getGender()}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Дата рождения</td>
+                    <td th:text="${#temporals.format(client.getDateOfBirth(), 'dd.MM.yyyy')}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Номер телефона</td>
+                    <td th:text="${client.getPhoneNumber()}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>E-mail</td>
+                    <td th:text="${client.getUser().getEmail()}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="modal fade" id="generalInfoModal" tabindex="-1" role="dialog"
+                 aria-labelledby="passwordModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="generalInfoModalLabel">Редактирование общей информации</h5>
+                            <button id="btnCloseGeneralInfoModal" type="button" class="btn-close"
+                                    data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-control">
+                                <div class="mb-3 mt-3">
+                                    <input id="clientId" type="text" name="clientId" class="form-control" hidden="hidden">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="surname" class="form-label">Фамилия:</label>
+                                    <input id="surname" type="text" name="surname" class="form-control"
+                                           pattern="([а-яА-Я]+)|([a-zA-Z]+)" required>
+                                    <label id="surnameError" class="errorLabel">Фамилия должна содержать только символы
+                                        русского или латинского алфавита.</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="name" class="form-label">Имя:</label>
+                                    <input id="name" type="text" name="name" class="form-control"
+                                           pattern="([а-яА-Я]+)|([a-zA-Z]+)" required>
+                                    <label id="nameError" class="errorLabel">Имя должно содержать только символы
+                                        русского или латинского алфавита.</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="patronymic" class="form-label">Отчество:</label>
+                                    <input id="patronymic" type="text" name="patronymic" class="form-control"
+                                           pattern="([а-яА-Я]+)|([a-zA-Z]+)" required>
+                                    <label id="patronymicError" class="errorLabel">Отчество должно содержать только
+                                        символы русского или латинского алфавита.</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label class="form-label">Пол:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="male" value="Мужской" checked>
+                                        <label class="form-check-label" for="male">
+                                            Мужской
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="gender" id="female" value="Женский">
+                                        <label class="form-check-label" for="female">
+                                            Женский
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="dateOfBirth" class="form-label">Дата рождения:</label>
+                                    <input id="dateOfBirth" type="date" name="dateOfBirth" class="form-control"
+                                           max="2014-12-31" required>
+                                    <label id="dateOfBirthError" class="errorLabel">В системе не могут быть
+                                        зарегистрированы пользователи младше 18 лет.</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="phoneNumber" class="form-label">Номер телефона:</label>
+                                    <input id="phoneNumber" type="text" name="phoneNumber" class="form-control"
+                                           pattern="^$|^\+375\((29|44|25|33)\)[0-9]{3}-[0-9]{2}-[0-9]{2}$" required>
+                                    <label id="phoneNumberError" class="errorLabel">Номер телефона должен
+                                        соответствовать шаблону "+375(29|25|44|33)###-##-##"</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <input id="userId" type="text" name="userId" class="form-control" hidden="hidden">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <input id="passportId" type="text" name="passportId" class="form-control" hidden="hidden">
+                                </div>
+                                <div class="d-grid gap-2 mx-auto">
+                                    <button id="editGeneralInfoBtn" type="submit" class="btn btn-dark">Сохранить изменения</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-2 bd-highlight">
+            <table style="width: 500px;" class="table table-hover">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th colspan="2">Паспортные данные
+                        <a id="editPassport" class="icon-edit" role="button" data-bs-toggle="modal"
+                           data-bs-target="#passportModal"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-lg-start">
+                    <td>Номер паспорта</td>
+                    <td th:text="${client.getPassportData().getPassportNumber()}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Кем выдан</td>
+                    <td th:text="${client.getPassportData().getOrganization()}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Дата выдачи</td>
+                    <td th:text="${#temporals.format(client.getPassportData().getDateOfIssue(), 'dd.MM.yyyy')}"></td>
+                </tr>
+                <tr class="text-lg-start">
+                    <td>Срок действия</td>
+                    <td th:text="${#temporals.format(client.getPassportData().getValidityPeriod(), 'dd.MM.yyyy')}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="modal fade" id="passportModal" tabindex="-1" role="dialog"
+                 aria-labelledby="passwordModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="passportModalLabel">Редактирование паспортных данных</h5>
+                            <button id="btnClosePassportModal" type="button" class="btn-close"
+                                    data-bs-dismiss="modal" aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-control">
+                                <div class="mb-3 mt-3">
+                                    <input id="passportDataId" type="text" name="passportId" class="form-control" hidden="hidden">
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="passportNumber" class="form-label">Серия и номер паспорта:</label>
+                                    <input id="passportNumber" type="text" name="passportNumber" class="form-control"
+                                           pattern="[A-Z]{2}[0-9]{7}" required>
+                                    <label id="passportNumberError" class="errorLabel">Номер паспорта должен быть введен в формате XX1234567.</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="organization" class="form-label">Кем выдан:</label>
+                                    <input id="organization" type="text" name="organization" class="form-control"
+                                           pattern="[а-яА-Я]+" required>
+                                    <label id="organizationError" class="errorLabel">Название организации должно содержать только символы
+                                        русского алфавита.</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="dateOfIssue" class="form-label">Дата выдачи:</label>
+                                    <input id="dateOfIssue" type="date" name="dateOfIssue" class="form-control"
+                                           required>
+                                    <label id="dateOfIssueError" class="errorLabel">Поле является обязательным.</label>
+                                </div>
+                                <div class="mb-3 mt-3">
+                                    <label for="passportValidityPeriod" class="form-label">Срок действия:</label>
+                                    <input id="passportValidityPeriod" type="date" name="validityPeriod" class="form-control">
+                                    <label id="passportValidityPeriodError" class="errorLabel">Поле является обязательным.</label>
+                                </div>
+                                <div class="d-grid gap-2 mx-auto">
+                                    <button id="editPassportBtn" type="submit" class="btn btn-dark">Сохранить изменения</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="template">
+<head>
+  <title>Вклады до востребования</title>
+  <link th:href="@{/css/client_styles.css}" rel="stylesheet" />
+  <link th:href="@{/css/styles.css}" rel="stylesheet" />
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <script type="text/javascript" src="../js/filtration.js" th:src="@{/js/filtration.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+  <div class="container mt-3">
+    <div class="card">
+      <div class="card-body">
+        <form class="search-box shadow" method="get" th:action="@{index}">
+          <input type="text" class="search-field" name="keyword" placeholder="Искать здесь..." th:value="${keyword}">
+          <button type="submit" class="search-button"></button>
+        </form>
+        <table class="table table-hover table-striped">
+          <thead class="table-dark">
+          <tr class="text-center">
+            <th>№</th>
+            <th>ФИО<a class="icon-sort" th:href="@{/clients/fioSorting}"/></th>
+            <th>Пол</th>
+            <th>Дата рождения<a class="icon-sort" th:href="@{/clients/dateSorting}"/></th>
+            <th>Номер телефона</th>
+            <th>E-mail</th>
+            <th>Номер паспорта</th>
+            <th>Организация</th>
+            <th>Дата выдачи</th>
+            <th>Срок действия</th>
+            <th>Вклады</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr class="text-center" th:each="client:${listClients}">
+            <td th:text="${clientStat.index + 1}"></td>
+            <td th:text="${client.getSurname() + ' ' + client.getName() + ' ' + client.getPatronymic()}"></td>
+            <td th:text="${client.getGender()}"></td>
+            <td th:text="${#temporals.format(client.getDateOfBirth(), 'dd.MM.yyyy')}"></td>
+            <td th:text="${client.getPhoneNumber()}"></td>
+            <td th:text="${client.getUser().getEmail()}"></td>
+            <td th:text="${client.getPassportData().getPassportNumber()}"></td>
+            <td th:text="${client.getPassportData().getOrganization()}"></td>
+            <td th:text="${#temporals.format(client.getPassportData().getDateOfIssue(), 'dd.MM.yyyy')}"></td>
+            <td th:text="${#temporals.format(client.getPassportData().getValidityPeriod(), 'dd.MM.yyyy')}"></td>
+            <td>
+              <a class="btn btn-info more_btn btn-size" th:href="@{/openedDeposits/client(clientId=${client.getClientId()})}"></a>
+            </td>
+          </tr>
+          </tbody>
+          <a class="filter-btn" role="button" data-bs-toggle="modal" data-bs-target="#clientFilter"></a>
+        </table>
+      </div>
+      <div class="modal fade" id="clientFilter" tabindex="-1" role="dialog" aria-labelledby="filterLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="filterLabel">Фильтрация клиентов по дате рождения</h5>
+              <button id="close-btn-filter" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+              </button>
+            </div>
+            <div class="modal-body">
+              <form class="form-control">
+                <div class="mb-3 mt-3">
+                  <label for="startDate" class="form-label">От:</label>
+                  <input id="startDate" type="date" name="startDate" class="form-control" required>
+                </div>
+                <div class="mb-3 mt-3">
+                  <label for="endDate" class="form-label">До:</label>
+                  <input id="endDate" type="date" name="endDate" class="form-control" required>
+                  <label id="dateRangeError" class="errorLabel">Диапазон дат введен некорректно.</label>
+                </div>
+                <div class="d-grid gap-2 mx-auto">
+                  <button id="filter" type="submit" class="btn btn-dark">Осуществить фильтрацию</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

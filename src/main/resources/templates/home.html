@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="template">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link th:href="@{/css/home_styles.css}" rel="stylesheet"/>
+    <script type="text/javascript" src="../js/home.js" th:src="@{/js/home.js}"></script>
+    <script sec:authorize="hasAuthority('Admin')" type="text/javascript" src="../js/pieChart.js" th:src="@{/js/pieChart.js}"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div sec:authorize="hasAuthority('Client')" class="d-flex flex-row bd-highlight mb-3 justify-content-center mt-5">
+        <div class="p-2 bd-highlight">
+            <iframe width="800" height="450" src="https://www.youtube.com/embed/Oj6RmdkPQeA"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+            </iframe>
+        </div>
+        <div class="p-2 bd-highlight">
+            <div class="d-flex flex-column bd-highlight mb-3">
+                <div class="p-2 bd-highlight">
+                    <iframe height="131" src="https://admin.myfin.by/outer/informer/minsk/full" width="100%"
+                            class="currency_course"></iframe>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <div class="converter">
+                        <div id='gcw_mainF8OGZcwPH' class='gcw_mainF8OGZcwPH'></div>
+                    </div>
+                    <script>function reloadF8OGZcwPH() {
+                        let sc = document.getElementById('scF8OGZcwPH');
+                        if (sc) sc.parentNode.removeChild(sc);
+                        sc = document.createElement('script');
+                        sc.type = 'text/javascript';
+                        sc.async = true;
+                        sc.id = 'scF8OGZcwPH';
+                        sc.src = 'https://freecurrencyrates.com/ru/widget-vertical?iso=USD-EUR-GBP-JPY-CNY-XUL&df=2&p=F8OGZcwPH&v=fits&source=fcr&width=245&width_title=0&firstrowvalue=1&thm=A6C9E2,FCFDFD,4297D7,5C9CCC,FFFFFF,C5DBEC,FCFDFD,2E6E9E,000000&title=%D0%9A%D0%BE%D0%BD%D0%B2%D0%B5%D1%80%D1%82%D0%B5%D1%80%20%D0%B2%D0%B0%D0%BB%D1%8E%D1%82&tzo=-180';
+                        const div = document.getElementById('gcw_mainF8OGZcwPH');
+                        div.parentNode.insertBefore(sc, div);
+                    }
+                    reloadF8OGZcwPH();
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="messageModal" tabindex="-1" role="dialog"
+             aria-labelledby="messageModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageModalLabel">Уведомление!!!</h5>
+                        <button id="btnMessageModalClose" type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="text" class="mb-3 mt-3">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div sec:authorize="hasAuthority('Admin')" class="container">
+        <div class="d-flex flex-column mt-4">
+            <div class="p-2 d-flex flex-row justify-content-around">
+                <div class="p-2 block">
+                    <div class="d-flex flex-row">
+                        <div class="p-2">
+                            <button class="icon-clients"/>
+                        </div>
+                        <div class="p-2 flex-column">
+                            <div class="p-2 text-center">
+                                <h1 th:text="${clientsNumber}"></h1>
+                            </div>
+                            <div class="p-2 text-center">
+                                <h3>Клиентов</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-2 block">
+                    <div class="d-flex flex-row">
+                        <div class="p-2">
+                            <button class="icon-deposits"/>
+                        </div>
+                        <div class="p-2 flex-column">
+                            <div class="p-2 text-center">
+                                <h1 th:text="${depositsNumber}"></h1>
+                            </div>
+                            <div class="p-2 text-center">
+                                <h3>Вкладов</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-2 block">
+                    <div class="d-flex flex-row">
+                        <div class="p-2">
+                            <button class="icon-banks"/>
+                        </div>
+                        <div class="p-2 flex-column">
+                            <div class="p-2 text-center">
+                                <h1 th:text="${banksNumber}"></h1>
+                            </div>
+                            <div class="p-2 text-center">
+                                <h3>Банков</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-2 d-flex flex-row">
+                <div id="container1" class="p-2"
+                     style="width: 550px; height: 400px; margin: 0 auto; border-radius: 10px"></div>
+                <div id="container2" class="p-2"
+                     style="width: 550px; height: 400px; margin: 0 auto; border-radius: 10px"></div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        $(function () {
+            Highcharts.chart('container1', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'График \"Объем совокупных вкладов\"'
+                },
+                xAxis: {
+                    categories: [[${depositsMap.keySet()}]],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    max: 5,
+                    title: {
+                        text: 'Количество вкладов'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} K</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Дни',
+                    data: [[${depositsMap.values()}]]
+                }]
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

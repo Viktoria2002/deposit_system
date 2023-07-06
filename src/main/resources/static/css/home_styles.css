@@ -1,0 +1,57 @@
+body {
+    background-color: #DCDCDC;
+}
+
+.block {
+    background-color: white;
+    width: 300px;
+    height: 150px;
+    border-radius: 10px;
+}
+.icon-clients {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    background-color: #483D8B;
+    border-color: #483D8B;
+    position: relative;
+}
+
+.icon-clients:before{
+    content: "\f0c0";
+    font-family: FontAwesome;
+    font-size: 80px;
+    color: white;
+}
+
+.icon-deposits {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    background-color: #483D8B;
+    border-color: #483D8B;
+    position: relative;
+}
+
+.icon-deposits:before{
+    content: "\f0d6";
+    font-family: FontAwesome;
+    font-size: 80px;
+    color: white;
+}
+
+.icon-banks {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    background-color: #483D8B;
+    border-color: #483D8B;
+    position: relative;
+}
+
+.icon-banks:before{
+    content: "\f19c";
+    font-family: FontAwesome;
+    font-size: 80px;
+    color: white;
+}

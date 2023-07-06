@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="template">
+<head>
+    <title>Банки</title>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/opened_deposit_styles.css}" rel="stylesheet"/>
+    <script type="text/javascript" src="../js/statement.js" th:src="@{/js/statement.js}"></script>
+</head>
+<body>
+<div layout:fragment="content1">
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                    <tr class="text-center">
+                        <th>№</th>
+                        <th>Вклад</th>
+                        <th>Сумма</th>
+                        <th>Валюта</th>
+                        <th>Дата открытия</th>
+                        <th>Статус</th>
+                        <th colspan="5">Операции</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-center" th:each="demandDeposit:${listOpenedDemandDeposits}">
+                        <td th:text="${demandDepositStat.index + 1}"></td>
+                        <td th:text="${demandDeposit.getDemandDeposit().getDepositName()}"></td>
+                        <td th:text="${demandDeposit.getAmount()}"></td>
+                        <td th:text="${demandDeposit.getDemandDeposit().getCurrency()}"></td>
+                        <td th:text="${#temporals.format(demandDeposit.getOpeningDate(), 'dd.MM.yyyy')}"></td>
+                        <td th:text="${demandDeposit.getStatus()}"></td>
+                        <td>
+                            <a class="btn btn-secondary" th:href="@{/demandDepositOperations/statement(depositId=${demandDeposit.getId()})}">Выписка</a>
+                        </td>
+                        <td>
+                            <a id="replenishment"
+                               th:class="${demandDeposit.getDemandDeposit().isHasReplenishment()?'btn btn-success deposit-btn':'btn btn-outline-success disabled'}"
+                               role="button" data-bs-toggle="modal" data-bs-target="#replenishmentModal"
+                               th:data-atr="${demandDeposit.getId()}">Пополнение</a>
+                        </td>
+                        <td>
+                            <a id="withdrawal"
+                               th:class="${demandDeposit.getDemandDeposit().isHasPartialWithdrawal()?'btn btn-success deposit-btn':'btn btn-outline-success disabled'}"
+                               role="button" data-bs-toggle="modal" data-bs-target="#withdrawalModal"
+                               th:data-atr="${demandDeposit.getId()}">Снятие</a>
+                        </td>
+                        <td>
+                            <a id="earlyClosure" th:class="${demandDeposit.getDemandDeposit().isHasEarlyWithdrawal()?'btn btn-danger':'btn btn-outline-danger disabled'}"
+                               role="button" data-bs-toggle="modal" data-bs-target="#earlyClosureModal"
+                               th:data-atr="${demandDeposit.getId()}">Закрытие вклада</a>
+                        </td>
+                    </tr>
+                    <tr class="text-center" th:each="termDeposit:${listOpenedTermDeposits}">
+                        <td th:text="${termDepositStat.index + listOpenedDemandDeposits.size() + 1}"></td>
+                        <td th:text="${termDeposit.getTermDeposit().getDepositName()}"></td>
+                        <td th:text="${termDeposit.getAmount()}"></td>
+                        <td th:text="${termDeposit.getTermDeposit().getCurrency()}"></td>
+                        <td th:text="${#temporals.format(termDeposit.getOpeningDate(), 'dd.MM.yyyy')}"></td>
+                        <td th:text="${termDeposit.getStatus()}"></td>
+                        <td>
+                            <a class="btn btn-secondary" th:href="@{/termDepositOperations/statement(depositId=${termDeposit.getId()})}">Выписка</a>
+                        </td>
+                        <td>
+                            <a id="replenishment2"
+                               th:class="${termDeposit.getTermDeposit().isHasReplenishment()?'btn btn-success deposit-btn':'btn btn-outline-success disabled'}"
+                               role="button" data-bs-toggle="modal" data-bs-target="#replenishmentModal2"
+                               th:data-atr="${termDeposit.getId()}">Пополнение</a>
+                        </td>
+                        <td>
+                            <a id="withdrawal2"
+                               th:class="${termDeposit.getTermDeposit().isHasPartialWithdrawal()?'btn btn-success deposit-btn':'btn btn-outline-success disabled'}"
+                               role="button" data-bs-toggle="modal" data-bs-target="#withdrawalModal2"
+                               th:data-atr="${termDeposit.getId()}">Снятие</a>
+                        </td>
+                        <td>
+                            <a id="earlyClosure2" th:class="${termDeposit.getTermDeposit().isHasEarlyWithdrawal()?'btn btn-danger':'btn btn-outline-danger disabled'}"
+                               role="button" data-bs-toggle="modal" data-bs-target="#earlyClosureModal2"
+                               th:data-atr="${termDeposit.getId()}">Закрытие вклада</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="modal fade" id="replenishmentModal" tabindex="-1" role="dialog"
+                     aria-labelledby="replenishmentModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="replenishmentModalLabel">Пополнение вклада</h5>
+                                <button id="btnCloseReplenishmentModal" type="button" class="btn-close"
+                                        data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-control">
+                                    <div class="mb-3 mt-3">
+                                        <input id="openedDemandDepositId" type="text" class="form-control"
+                                               hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">Банковская карта:</label>
+                                        <select id="cardForReplenishment" name="card" class="form-select"></select>
+                                        <label id="cardForReplenishmentError" class="errorLabel">На выбранной карте
+                                            недостаточно средств.</label>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="cardBalanceForDemandDeposit" type="text" class="form-control"
+                                               hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="replenishmentAmountOfDemandDeposit" class="form-label">Сумма
+                                            пополнения:</label>
+                                        <input id="replenishmentAmountOfDemandDeposit" type="number" step="0.01"
+                                               name="amount" class="form-control">
+                                    </div>
+                                    <div class="d-grid gap-2 mx-auto">
+                                        <button id="replenishmentOfDemandDepositBtn" type="submit" class="btn btn-dark">
+                                            Пополнить вклад
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="withdrawalModal" tabindex="-1" role="dialog"
+                     aria-labelledby="replenishmentModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="withdrawalModalLabel">Снятие денежных средств</h5>
+                                <button id="btnCloseWithdrawalModal" type="button" class="btn-close"
+                                        data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-control">
+                                    <div class="mb-3 mt-3">
+                                        <input id="openedDemandDepositId2" type="text" class="form-control" hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">Банковская карта:</label>
+                                        <select id="cardForWithdrawal" name="card" class="form-select"></select>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="amountOfDemandDeposit" type="text" name="amount" hidden="hidden"
+                                               class="form-control">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="amountOfOpenedDemandDeposit" type="text" name="amount" hidden="hidden"
+                                               class="form-control">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="withdrawalAmountOfDemandDeposit" class="form-label">Сумма
+                                            перевода:</label>
+                                        <input id="withdrawalAmountOfDemandDeposit" type="number" step="0.01"
+                                               name="amount" class="form-control">
+                                        <label id="amountForWithdrawalError" class="errorLabel">Был превышен лимит
+                                            перевода. Остаток на депозитном счету не должен быть меньше минимально
+                                            возможной суммы вклада.</label>
+                                    </div>
+                                    <div class="d-grid gap-2 mx-auto">
+                                        <button id="withdrawalOfDemandDepositBtn" type="submit" class="btn btn-dark">
+                                            Перевести на карту
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="earlyClosureModal" tabindex="-1" role="dialog"
+                     aria-labelledby="earlyClosureModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="earlyClosureModalLabel">Закрытие вклада</h5>
+                                <button id="btnCloseEarlyClosureModal" type="button" class="btn-close"
+                                        data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-control">
+                                    <div class="mb-3 mt-3">
+                                        <input id="openedDemandDepositId3" type="text" class="form-control" hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">Выберите банковскую карту для перевода денежных средств:</label>
+                                        <select id="cardForEarlyClosure" name="card" class="form-select"></select>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="amountOfDepositForClosure" type="text" name="amount" hidden="hidden"
+                                               class="form-control">
+                                    </div>
+                                    <div class="d-grid gap-2 mx-auto">
+                                        <button id="earlyClosureOfDemandDepositBtn" type="submit" class="btn btn-dark">
+                                            Закрыть вклад
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="replenishmentModal2" tabindex="-1" role="dialog"
+                     aria-labelledby="replenishmentModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="replenishmentModalLabel2">Пополнение вклада</h5>
+                                <button id="btnCloseReplenishmentModal2" type="button" class="btn-close"
+                                        data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-control">
+                                    <div class="mb-3 mt-3">
+                                        <input id="openedTermDepositId" type="text" class="form-control"
+                                               hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">Банковская карта:</label>
+                                        <select id="cardForReplenishment2" name="card" class="form-select"></select>
+                                        <label id="cardForReplenishmentError2" class="errorLabel">На выбранной карте
+                                            недостаточно средств.</label>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="cardBalanceForTermDeposit2" type="text" class="form-control"
+                                               hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="replenishmentAmountOfTermDeposit2" class="form-label">Сумма
+                                            пополнения:</label>
+                                        <input id="replenishmentAmountOfTermDeposit2" type="number" step="0.01"
+                                               name="amount" class="form-control">
+                                    </div>
+                                    <div class="d-grid gap-2 mx-auto">
+                                        <button id="replenishmentOfTermDepositBtn2" type="submit" class="btn btn-dark">
+                                            Пополнить вклад
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="withdrawalModal2" tabindex="-1" role="dialog"
+                     aria-labelledby="replenishmentModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="withdrawalModalLabel2">Снятие денежных средств</h5>
+                                <button id="btnCloseWithdrawalModal2" type="button" class="btn-close"
+                                        data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-control">
+                                    <div class="mb-3 mt-3">
+                                        <input id="openedTermDepositId2" type="text" class="form-control" hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">Банковская карта:</label>
+                                        <select id="cardForWithdrawal2" name="card" class="form-select"></select>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="amountOfTermDeposit" type="text" name="amount" hidden="hidden"
+                                               class="form-control">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="amountOfOpenedTermDeposit2" type="text" name="amount" hidden="hidden"
+                                               class="form-control">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label for="withdrawalAmountOfTermDeposit2" class="form-label">Сумма
+                                            перевода:</label>
+                                        <input id="withdrawalAmountOfTermDeposit2" type="number" step="0.01"
+                                               name="amount" class="form-control">
+                                        <label id="amountForWithdrawalError2" class="errorLabel">Был превышен лимит
+                                            перевода. Остаток на депозитном счету не должен быть меньше минимально
+                                            возможной суммы вклада.</label>
+                                    </div>
+                                    <div class="d-grid gap-2 mx-auto">
+                                        <button id="withdrawalOfTermDepositBtn2" type="submit" class="btn btn-dark">
+                                            Перевести на карту
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="earlyClosureModal2" tabindex="-1" role="dialog"
+                     aria-labelledby="earlyClosureModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="earlyClosureModalLabel3">Досрочное закрытие вклада</h5>
+                                <button id="btnCloseEarlyClosureModal3" type="button" class="btn-close"
+                                        data-bs-dismiss="modal" aria-label="Close">
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-control">
+                                    <label id="earlyClosureLabel" class="form-label errorLabel">Срок действия вклада истёк. Осущетсвите перевод денежных средств.</label>
+                                    <div class="mb-3 mt-3">
+                                        <input id="openedTermDepositId3" type="text" class="form-control" hidden="hidden">
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">Выберите банковскую карту для перевода денежных средств:</label>
+                                        <select id="cardForEarlyClosure2" name="card" class="form-select"></select>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <input id="amountOfDepositForClosure2" type="text" name="amount" hidden="hidden"
+                                               class="form-control">
+                                    </div>
+                                    <div class="d-grid gap-2 mx-auto">
+                                        <button id="earlyClosureOfTermDepositBtn2" type="submit" class="btn btn-dark">
+                                            Закрыть вклад
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
